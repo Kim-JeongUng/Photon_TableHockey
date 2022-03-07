@@ -113,7 +113,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Health: 1
   photon_ismine: 0
-  playerUiPrefab: {fileID: 0}
 --- !u!114 &8856955473804813389
 MonoBehaviour:
   m_ObjectHideFlags: 0

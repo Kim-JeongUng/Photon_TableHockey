@@ -36,9 +36,6 @@ namespace Photon.Pun.Demo.PunBasics
 
         #region Private Fields
 
-        [Tooltip("The Player's UI GameObject Prefab")]
-        [SerializeField]
-        private GameObject playerUiPrefab;
         #endregion
 
         #region MonoBehaviour CallBacks
@@ -68,10 +65,12 @@ namespace Photon.Pun.Demo.PunBasics
             {
                 photon_ismine = true;
                 LocalPlayerInstance = gameObject;
+                // ¾Æ±º
                 this.GetComponent<Renderer>().material.SetColor("_Color", Color.blue);
             }
             else
-            {
+            {   
+                //Àû
                 this.GetComponent<Renderer>().material.SetColor("_Color", Color.red);
             }
             // #Critical
@@ -85,15 +84,7 @@ namespace Photon.Pun.Demo.PunBasics
         public void Start()
         {
             // Create the UI
-            if (this.playerUiPrefab != null)
-            {
-                GameObject _uiGo = Instantiate(this.playerUiPrefab);
-                _uiGo.SendMessage("SetTarget", this, SendMessageOptions.RequireReceiver);
-            }
-            else
-            {
-                Debug.LogWarning("<Color=Red><b>Missing</b></Color> PlayerUiPrefab reference on player Prefab.", this);
-            }
+            
 
 #if UNITY_5_4_OR_NEWER
             // Unity 5.4 has a new scene management. register a method to call CalledOnLevelWasLoaded.
@@ -179,8 +170,6 @@ namespace Photon.Pun.Demo.PunBasics
                 transform.position = new Vector3(0f, 5f, 0f);
             }
 
-            GameObject _uiGo = Instantiate(this.playerUiPrefab);
-            _uiGo.SendMessage("SetTarget", this, SendMessageOptions.RequireReceiver);
         }
 
         #endregion
