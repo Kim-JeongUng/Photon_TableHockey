@@ -39,15 +39,16 @@ namespace Photon.Pun.Demo.PunBasics
         [Tooltip("The prefab to use for representing the player")]
         [SerializeField]
         private GameObject playerPrefab;
+		[SerializeField]
+		private GameObject ballPrefab;
+		#endregion
 
-        #endregion
+		#region MonoBehaviour CallBacks
 
-        #region MonoBehaviour CallBacks
-
-        /// <summary>
-        /// MonoBehaviour method called on GameObject by Unity during initialization phase.
-        /// </summary>
-        void Start()
+		/// <summary>
+		/// MonoBehaviour method called on GameObject by Unity during initialization phase.
+		/// </summary>
+		void Start()
 		{
 			Instance = this;
 
@@ -65,12 +66,23 @@ namespace Photon.Pun.Demo.PunBasics
 			} else {
 
 
-				if (PlayerManager.LocalPlayerInstance==null)
+				if (PlayerManager.LocalPlayerInstance == null)
 				{
-				    Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
+					Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
 
 					// we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
-					PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f,5f,0f), Quaternion.identity, 0);
+
+					if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
+					{		
+						PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 1f, -10f), Quaternion.identity, 0);
+						PhotonNetwork.Instantiate(this.ballPrefab.name, new Vector3(0f, 1f, 0f), Quaternion.identity, 0);
+					}
+					if (PhotonNetwork.CurrentRoom.PlayerCount == 2)
+					{
+						PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 1f, 10f), Quaternion.identity, 0);
+						//if (PhotonNetwork.IsMasterClient)
+							//PhotonNetwork.Instantiate(this.ballPrefab.name, new Vector3(0f, 1f, 0f), Quaternion.identity, 0);
+					}
 				}else{
 
 					Debug.LogFormat("Ignoring scene load for {0}", SceneManagerHelper.ActiveSceneName);
