@@ -162,9 +162,9 @@ namespace Photon.Pun.Demo.PunBasics
 				Debug.LogError( "PhotonNetwork : Trying to Load a level but we are not the master Client" );
 			}
 
-			Debug.LogFormat( "PhotonNetwork : Loading Level : {0}", PhotonNetwork.CurrentRoom.PlayerCount );
+			Debug.LogFormat("PhotonNetwork : Loading Level : 1");//, PhotonNetwork.CurrentRoom.PlayerCount );
 
-			PhotonNetwork.LoadLevel("PunBasics-Room for "+PhotonNetwork.CurrentRoom.PlayerCount);
+			PhotonNetwork.LoadLevel("PunBasics-Room for "+1);// +PhotonNetwork.CurrentRoom.PlayerCount);
 		}
 
 		#endregion

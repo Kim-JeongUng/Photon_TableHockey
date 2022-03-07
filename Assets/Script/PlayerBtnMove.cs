@@ -10,6 +10,8 @@
 
 using UnityEngine;
 using UnityEngine.EventSystems;
+using System.Collections;
+
 
 namespace Photon.Pun.Demo.PunBasics
 {
@@ -29,6 +31,7 @@ namespace Photon.Pun.Demo.PunBasics
         [Tooltip("The local player instance. Use this to know if the local player is represented in the Scene")]
         public static GameObject LocalPlayerInstance;
 
+        public bool photon_ismine = false;
         #endregion
 
         #region Private Fields
@@ -36,8 +39,6 @@ namespace Photon.Pun.Demo.PunBasics
         [Tooltip("The Player's UI GameObject Prefab")]
         [SerializeField]
         private GameObject playerUiPrefab;
-        public Vector3 m_curPos;
-        public Vector3 m_prevPos;
         #endregion
 
         #region MonoBehaviour CallBacks
@@ -48,11 +49,26 @@ namespace Photon.Pun.Demo.PunBasics
         public void Awake()
         {
 
+            int cnt = 0;
+            GameObject[] bat = GameObject.FindGameObjectsWithTag("Bat");
+            for (int i = 0; i < bat.Length; i++)
+            {
+                if (bat[i].GetComponent<PhotonView>().IsMine)
+                {
+                    cnt++;
+                }
+                if (cnt >= 2)
+                {
+                    PhotonNetwork.Destroy(this.gameObject);
+                }
+            }
             // #Important
             // used in GameManager.cs: we keep track of the localPlayer instance to prevent instanciation when levels are synchronized
             if (photonView.IsMine)
             {
+                photon_ismine = true;
                 LocalPlayerInstance = gameObject;
+
             }
 
             // #Critical
@@ -105,14 +121,16 @@ namespace Photon.Pun.Demo.PunBasics
             // we only process Inputs and check health if we are the local player
             if (photonView.IsMine)
             {
-                if (Input.GetMouseButton(0))
+                /*if (Input.GetMouseButton(0))
                 {
 
                     Vector3 point = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x,
                     Input.mousePosition.y, -Camera.main.transform.position.z));
                     LocalPlayerInstance.transform.position = point;
 
-                }
+                }*/
+
+    
 
                 if (this.Health <= 0f)
                 {
@@ -121,14 +139,29 @@ namespace Photon.Pun.Demo.PunBasics
             }
 
         }
+        IEnumerator OnMouseDown()
+        {
+            if (photon_ismine)
+            {
+                Vector3 scrSpace = Camera.main.WorldToScreenPoint(transform.position);
+                Vector3 offset = transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, scrSpace.z));
 
+                while (Input.GetMouseButton(0))
+                {
+                    Vector3 curScreenSpace = new Vector3(Input.mousePosition.x, Input.mousePosition.y, scrSpace.z);
+
+                    Vector3 curPosition = Camera.main.ScreenToWorldPoint(curScreenSpace) + offset;
+                    transform.position = curPosition;
+                    yield return null;
+                }
+            }
+        }
         /// <summary>
         /// MonoBehaviour method called when the Collider 'other' enters the trigger.
         /// Affect Health of the Player if the collider is a beam
         /// Note: when jumping and firing at the same, you'll find that the player's own beam intersects with itself
         /// One could move the collider further away to prevent this or check if the beam belongs to the player.
         /// </summary>
-
 
 #if !UNITY_5_4_OR_NEWER
         /// <summary>See CalledOnLevelWasLoaded. Outdated in Unity 5.4.</summary>
