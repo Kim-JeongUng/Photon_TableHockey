@@ -74,15 +74,15 @@ namespace Photon.Pun.Demo.PunBasics
 
 					if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
 					{		
-						PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 1f, -10f), Quaternion.identity, 0);
-						PhotonNetwork.Instantiate(this.ballPrefab.name, new Vector3(0f, 1f, 0f), Quaternion.identity, 0);
+						//PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 1f, -10f), Quaternion.identity, 0);
+						//PhotonNetwork.Instantiate(this.ballPrefab.name, new Vector3(0f, 1f, 0f), Quaternion.identity, 0);		test용
 					}
 					if (PhotonNetwork.CurrentRoom.PlayerCount == 2)
 					{
 						PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 1f, 10f), Quaternion.identity, 0);
-						/*if (PhotonNetwork.IsMasterClient)
-							PhotonNetwork.Instantiate(this.ballPrefab.name, new Vector3(0f, 1f, 0f), Quaternion.identity, 0);*/
-					}
+                        if (PhotonNetwork.IsMasterClient)
+                            PhotonNetwork.Instantiate(this.ballPrefab.name, new Vector3(0f, 1f, 0f), Quaternion.identity, 0);
+                    }
 				}else{
 
 					Debug.LogFormat("Ignoring scene load for {0}", SceneManagerHelper.ActiveSceneName);

@@ -165,10 +165,10 @@ namespace Photon.Pun.Demo.PunBasics
         void CalledOnLevelWasLoaded(int level)
         {
             // check if we are outside the Arena and if it's the case, spawn around the center of the arena in a safe zone
-            if (!Physics.Raycast(transform.position, -Vector3.up, 5f))
+            /*if (!Physics.Raycast(transform.position, -Vector3.up, 5f))
             {
                 transform.position = new Vector3(0f, 5f, 0f);
-            }
+            }*/
 
         }
 
