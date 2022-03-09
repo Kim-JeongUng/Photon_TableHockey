@@ -10,7 +10,7 @@
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using UnityEngine.UI;
 using Photon.Realtime;
 
 namespace Photon.Pun.Demo.PunBasics
@@ -41,6 +41,14 @@ namespace Photon.Pun.Demo.PunBasics
         private GameObject playerPrefab;
 		[SerializeField]
 		private GameObject ballPrefab;
+		[SerializeField]
+		private GameObject Wait;
+		[SerializeField]
+		private Text ScoreRed;
+		[SerializeField]
+		private Text ScoreBlue;
+
+
 		#endregion
 
 		#region MonoBehaviour CallBacks
@@ -73,16 +81,19 @@ namespace Photon.Pun.Demo.PunBasics
 					// we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
 
 					if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
-					{		
-						//PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 1f, -10f), Quaternion.identity, 0);
-						//PhotonNetwork.Instantiate(this.ballPrefab.name, new Vector3(0f, 1f, 0f), Quaternion.identity, 0);		test용
+					{
+						Wait.SetActive(true);
 					}
 					if (PhotonNetwork.CurrentRoom.PlayerCount == 2)
 					{
-						PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 1f, 10f), Quaternion.identity, 0);
-                        if (PhotonNetwork.IsMasterClient)
-                            PhotonNetwork.Instantiate(this.ballPrefab.name, new Vector3(0f, 1f, 0f), Quaternion.identity, 0);
-                    }
+						Wait.SetActive(false);
+						if (PhotonNetwork.IsMasterClient)
+						{
+							PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 1f, -10f), Quaternion.identity, 0);
+						}
+						else
+							PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 1f, 10f), Quaternion.identity, 0);
+					}
 				}else{
 
 					Debug.LogFormat("Ignoring scene load for {0}", SceneManagerHelper.ActiveSceneName);
@@ -102,18 +113,37 @@ namespace Photon.Pun.Demo.PunBasics
 			if (Input.GetKeyDown(KeyCode.Escape))
 			{
 				QuitApplication();
+
 			}
+			if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount == 2 && null == GameObject.Find("Ball(Clone)"))
+			{
+				PhotonNetwork.Instantiate(this.ballPrefab.name, new Vector3(0f, 1f, 0f), Quaternion.identity, 0);
+			}
+			if (PhotonNetwork.CurrentRoom.PlayerCount == 2)
+			{
+				if (PhotonNetwork.IsMasterClient)
+				{
+					ScoreBlue.text = GameObject.FindGameObjectsWithTag("Bat")[0].GetComponent<PlayerManager>().Score.ToString();
+					ScoreRed.text = GameObject.FindGameObjectsWithTag("Bat")[1].GetComponent<PlayerManager>().Score.ToString();
+				}
+                else
+                {
+					ScoreBlue.text = GameObject.FindGameObjectsWithTag("Bat")[1].GetComponent<PlayerManager>().Score.ToString();
+					ScoreRed.text = GameObject.FindGameObjectsWithTag("Bat")[0].GetComponent<PlayerManager>().Score.ToString();
+				}
+			}
+
 		}
 
-        #endregion
+		#endregion
 
-        #region Photon Callbacks
+		#region Photon Callbacks
 
-        /// <summary>
-        /// Called when a Photon Player got connected. We need to then load a bigger scene.
-        /// </summary>
-        /// <param name="other">Other.</param>
-        public override void OnPlayerEnteredRoom( Player other  )
+		/// <summary>
+		/// Called when a Photon Player got connected. We need to then load a bigger scene.
+		/// </summary>
+		/// <param name="other">Other.</param>
+		public override void OnPlayerEnteredRoom( Player other  )
 		{
 			Debug.Log( "OnPlayerEnteredRoom() " + other.NickName); // not seen if you're the player connecting
 

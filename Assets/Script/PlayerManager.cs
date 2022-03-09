@@ -26,7 +26,7 @@ namespace Photon.Pun.Demo.PunBasics
         #region Public Fields
 
         [Tooltip("The current Health of our player")]
-        public float Health = 1f;
+        public int Score = 0;
 
         [Tooltip("The local player instance. Use this to know if the local player is represented in the Scene")]
         public static GameObject LocalPlayerInstance;
@@ -66,11 +66,11 @@ namespace Photon.Pun.Demo.PunBasics
                 photon_ismine = true;
                 LocalPlayerInstance = gameObject;
                 // ¾Æ±º
-                this.GetComponent<Renderer>().material.SetColor("_Color", Color.blue);
             }
+            if (PhotonNetwork.IsMasterClient && photon_ismine || !PhotonNetwork.IsMasterClient && !photon_ismine)
+                this.GetComponent<Renderer>().material.SetColor("_Color", Color.blue);
             else
             {   
-                //Àû
                 this.GetComponent<Renderer>().material.SetColor("_Color", Color.red);
             }
             // #Critical
@@ -113,14 +113,7 @@ namespace Photon.Pun.Demo.PunBasics
         public void Update()
         {
             // we only process Inputs and check health if we are the local player
-            if (photonView.IsMine)
-            {   
-
-                if (this.Health <= 0f)
-                {
-                    GameManager.Instance.LeaveRoom();
-                }
-            }
+          
 
         }
         IEnumerator OnMouseDown()
@@ -196,12 +189,12 @@ namespace Photon.Pun.Demo.PunBasics
             if (stream.IsWriting)
             {
                 // We own this player: send the others our data
-                stream.SendNext(this.Health);
+                stream.SendNext(this.Score);
             }
             else
             {
                 // Network player, receive data
-                this.Health = (float)stream.ReceiveNext();
+                this.Score = (int)stream.ReceiveNext();
             }
         }
 
