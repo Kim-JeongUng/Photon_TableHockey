@@ -47,8 +47,12 @@ namespace Photon.Pun.Demo.PunBasics
 		private Text ScoreRed;
 		[SerializeField]
 		private Text ScoreBlue;
+		private bool isGameRun;
 
+		[SerializeField]
+		private Camera Cam;
 
+		float timer = 0.0f;
 		#endregion
 
 		#region MonoBehaviour CallBacks
@@ -59,7 +63,7 @@ namespace Photon.Pun.Demo.PunBasics
 		void Start()
 		{
 			Instance = this;
-
+			isGameRun = false;
 			// in case we started this demo with the wrong scene being active, simply load the menu scene
 			if (!PhotonNetwork.IsConnected)
 			{
@@ -80,20 +84,22 @@ namespace Photon.Pun.Demo.PunBasics
 
 					// we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
 
-					if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
-					{
-						Wait.SetActive(true);
-					}
 					if (PhotonNetwork.CurrentRoom.PlayerCount == 2)
 					{
-						Wait.SetActive(false);
+						isGameRun = true;
 						if (PhotonNetwork.IsMasterClient)
 						{
 							PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 1f, -10f), Quaternion.identity, 0);
+							Cam.transform.eulerAngles = new Vector3(90, 0, 0);
 						}
 						else
+						{
 							PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 1f, 10f), Quaternion.identity, 0);
+							Cam.transform.eulerAngles = new Vector3(90, 180, 0);
+						}
 					}
+					else
+						isGameRun = false;
 				}else{
 
 					Debug.LogFormat("Ignoring scene load for {0}", SceneManagerHelper.ActiveSceneName);
@@ -109,30 +115,41 @@ namespace Photon.Pun.Demo.PunBasics
 		/// </summary>
 		void Update()
 		{
-			// "back" button of phone equals "Escape". quit app if that's pressed
 			if (Input.GetKeyDown(KeyCode.Escape))
 			{
 				QuitApplication();
-
 			}
-			if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount == 2 && null == GameObject.Find("Ball(Clone)"))
+			if (isGameRun)
 			{
-				PhotonNetwork.Instantiate(this.ballPrefab.name, new Vector3(0f, 1f, 0f), Quaternion.identity, 0);
-			}
-			if (PhotonNetwork.CurrentRoom.PlayerCount == 2)
-			{
-				if (PhotonNetwork.IsMasterClient)
+				Wait.SetActive(false);
+				// "back" button of phone equals "Escape". quit app if that's pressed
+				if (PhotonNetwork.IsMasterClient && null == GameObject.Find("Ball(Clone)"))
 				{
-					ScoreBlue.text = GameObject.FindGameObjectsWithTag("Bat")[0].GetComponent<PlayerManager>().Score.ToString();
-					ScoreRed.text = GameObject.FindGameObjectsWithTag("Bat")[1].GetComponent<PlayerManager>().Score.ToString();
+					timer += Time.deltaTime;
+					if (timer > 1.0f)
+					{
+						PhotonNetwork.Instantiate(this.ballPrefab.name, new Vector3(0f, 1f, 0f), Quaternion.identity, 0);
+					}
 				}
-                else
-                {
-					ScoreBlue.text = GameObject.FindGameObjectsWithTag("Bat")[1].GetComponent<PlayerManager>().Score.ToString();
-					ScoreRed.text = GameObject.FindGameObjectsWithTag("Bat")[0].GetComponent<PlayerManager>().Score.ToString();
+				else
+					timer = 0.0f;
+				
+				if (PhotonNetwork.IsConnected )
+				{
+					if (PhotonNetwork.IsMasterClient)
+					{
+						ScoreBlue.text = GameObject.FindGameObjectsWithTag("Bat")[0].GetComponent<PlayerManager>().Score.ToString();
+						ScoreRed.text = GameObject.FindGameObjectsWithTag("Bat")[1].GetComponent<PlayerManager>().Score.ToString();
+					}
+					else
+					{
+						ScoreBlue.text = GameObject.FindGameObjectsWithTag("Bat")[1].GetComponent<PlayerManager>().Score.ToString();
+						ScoreRed.text = GameObject.FindGameObjectsWithTag("Bat")[0].GetComponent<PlayerManager>().Score.ToString();
+					}
 				}
 			}
-
+			else
+				Wait.SetActive(true);
 		}
 
 		#endregion

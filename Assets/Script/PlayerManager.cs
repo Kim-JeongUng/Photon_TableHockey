@@ -46,19 +46,6 @@ namespace Photon.Pun.Demo.PunBasics
         public void Awake()
         {
 
-            int cnt = 0;
-            GameObject[] bat = GameObject.FindGameObjectsWithTag("Bat");
-            for (int i = 0; i < bat.Length; i++)
-            {
-                if (bat[i].GetComponent<PhotonView>().IsMine)
-                {
-                    cnt++;
-                }
-                if (cnt >= 2 && PhotonNetwork.IsMasterClient)
-                {
-                    PhotonNetwork.Destroy(this.gameObject);
-                }
-            }
             // #Important
             // used in GameManager.cs: we keep track of the localPlayer instance to prevent instanciation when levels are synchronized
             if (photonView.IsMine)
