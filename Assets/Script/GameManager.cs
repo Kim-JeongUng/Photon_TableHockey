@@ -43,10 +43,6 @@ namespace Photon.Pun.Demo.PunBasics
 		private GameObject ballPrefab;
 		[SerializeField]
 		private GameObject Wait;
-		[SerializeField]
-		private Text ScoreRed;
-		[SerializeField]
-		private Text ScoreBlue;
 		private bool isGameRun;
 
 		[SerializeField]
@@ -134,19 +130,6 @@ namespace Photon.Pun.Demo.PunBasics
 				else
 					timer = 0.0f;
 				
-				if (PhotonNetwork.IsConnected )
-				{
-					if (PhotonNetwork.IsMasterClient)
-					{
-						ScoreBlue.text = GameObject.FindGameObjectsWithTag("Bat")[0].GetComponent<PlayerManager>().Score.ToString();
-						ScoreRed.text = GameObject.FindGameObjectsWithTag("Bat")[1].GetComponent<PlayerManager>().Score.ToString();
-					}
-					else
-					{
-						ScoreBlue.text = GameObject.FindGameObjectsWithTag("Bat")[1].GetComponent<PlayerManager>().Score.ToString();
-						ScoreRed.text = GameObject.FindGameObjectsWithTag("Bat")[0].GetComponent<PlayerManager>().Score.ToString();
-					}
-				}
 			}
 			else
 				Wait.SetActive(true);

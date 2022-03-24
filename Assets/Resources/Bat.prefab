@@ -113,6 +113,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Score: 0
   photon_ismine: 0
+  MyScore: {fileID: 0}
+  EnemyScore: {fileID: 0}
 --- !u!114 &8856955473804813389
 MonoBehaviour:
   m_ObjectHideFlags: 0

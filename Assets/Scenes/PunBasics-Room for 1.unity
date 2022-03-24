@@ -231,7 +231,7 @@ GameObject:
   - component: {fileID: 155473759}
   - component: {fileID: 155473758}
   m_Layer: 5
-  m_Name: ScoreBlue
+  m_Name: BlueScore
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -715,6 +715,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11476684, guid: b7fe671fa5d4d4772a4b20715fb9b0ff, type: 3}
+      propertyPath: Cam
+      value: 
+      objectReference: {fileID: 480807945}
+    - target: {fileID: 11476684, guid: b7fe671fa5d4d4772a4b20715fb9b0ff, type: 3}
       propertyPath: Wait
       value: 
       objectReference: {fileID: 2125810259}
@@ -753,7 +757,7 @@ GameObject:
   - component: {fileID: 631376572}
   - component: {fileID: 631376571}
   m_Layer: 5
-  m_Name: ScoreRed
+  m_Name: RedScore
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

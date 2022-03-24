@@ -31,7 +31,7 @@ namespace Photon.Pun.Demo.PunBasics
                 {
                     if (!cols[i].CompareTag("Ball"))
                     {
-                        if (cols[i].CompareTag("GoalPost") && PhotonNetwork.IsMasterClient)
+                        if (cols[i].CompareTag("GoalPost"))
                         {
                             if (cols[i].name == "BlueGoalPost")
                             {
@@ -43,8 +43,8 @@ namespace Photon.Pun.Demo.PunBasics
                                 Debug.Log("hitRed");
                                 GameObject.FindGameObjectsWithTag("Bat")[0].GetComponent<PlayerManager>().Score += 1;
                             }
-                            PhotonNetwork.Destroy(this.gameObject);
                             ballDir = Vector3.zero;
+                            PhotonNetwork.Destroy(this.gameObject);
                         }
                         if (cols[i].CompareTag("Wall"))
                         { 
