@@ -26,7 +26,8 @@ namespace Photon.Pun.Demo.PunBasics
         #region Public Fields
 
         [Tooltip("The current Health of our player")]
-        public int Score = 0;
+        public int BlueScore = 0;
+        public int RedScore = 0;
 
         [Tooltip("The local player instance. Use this to know if the local player is represented in the Scene")]
         public static GameObject LocalPlayerInstance;
@@ -36,10 +37,6 @@ namespace Photon.Pun.Demo.PunBasics
 
         #region Private Fields
 
-        [SerializeField]
-        private Text MyScore;
-        [SerializeField]
-        private Text EnemyScore;
         #endregion
 
         #region MonoBehaviour CallBacks
@@ -61,12 +58,10 @@ namespace Photon.Pun.Demo.PunBasics
             if (PhotonNetwork.IsMasterClient && photon_ismine || !PhotonNetwork.IsMasterClient && !photon_ismine)
             {
                 this.GetComponent<Renderer>().material.SetColor("_Color", Color.blue);
-                MyScore = GameObject.Find("BlueScore").GetComponent<Text>();
             }
             else
             {
                 this.GetComponent<Renderer>().material.SetColor("_Color", Color.red);
-                EnemyScore = GameObject.Find("RedScore").GetComponent<Text>();
             }
             // #Critical
             // we flag as don't destroy on load so that instance survives level synchronization, thus giving a seamless experience when levels load.
@@ -109,7 +104,7 @@ namespace Photon.Pun.Demo.PunBasics
         {
             // we only process Inputs and check health if we are the local player
 
-            
+
 
         }
         IEnumerator OnMouseDown()
@@ -190,14 +185,10 @@ namespace Photon.Pun.Demo.PunBasics
             if (stream.IsWriting)
             {
                 // We own this player: send the others our data
-                stream.SendNext(this.Score);
-                MyScore.text = this.Score.ToString();
             }
             else
             {
                 // Network player, receive data
-                this.Score = (int)stream.ReceiveNext();
-                EnemyScore.text = this.Score.ToString();
             }
         }
 

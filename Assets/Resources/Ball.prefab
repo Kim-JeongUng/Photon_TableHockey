@@ -135,6 +135,7 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: 9031863965149354240}
+  - {fileID: -6882511041538088401}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -150,3 +151,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 612525d74b85bd94882d8d91c200c702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BlueScores: {fileID: 0}
+  RedScores: {fileID: 0}

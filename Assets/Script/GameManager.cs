@@ -10,7 +10,6 @@
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 using Photon.Realtime;
 
 namespace Photon.Pun.Demo.PunBasics
@@ -45,6 +44,10 @@ namespace Photon.Pun.Demo.PunBasics
 		private GameObject Wait;
 		private bool isGameRun;
 
+		public static int BlueScore;
+		public static int RedScore;
+
+
 		[SerializeField]
 		private Camera Cam;
 
@@ -59,6 +62,10 @@ namespace Photon.Pun.Demo.PunBasics
 		void Start()
 		{
 			Instance = this;
+
+			BlueScore = 0;
+			RedScore = 0;
+
 			isGameRun = false;
 			// in case we started this demo with the wrong scene being active, simply load the menu scene
 			if (!PhotonNetwork.IsConnected)
@@ -129,7 +136,7 @@ namespace Photon.Pun.Demo.PunBasics
 				}
 				else
 					timer = 0.0f;
-				
+
 			}
 			else
 				Wait.SetActive(true);
@@ -210,6 +217,8 @@ namespace Photon.Pun.Demo.PunBasics
 		}
 
 		#endregion
+
+		
 
 	}
 
