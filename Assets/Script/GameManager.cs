@@ -140,6 +140,7 @@ namespace Photon.Pun.Demo.PunBasics
 			}
 			else
 				Wait.SetActive(true);
+			Debug.Log(BlueScore);
 		}
 
 		#endregion

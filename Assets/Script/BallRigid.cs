@@ -88,8 +88,13 @@ namespace Photon.Pun.Demo.PunBasics
             }
             else
             {
-                BlueScores.text = stream.ReceiveNext().ToString();
-                RedScores.text = stream.ReceiveNext().ToString();
+                GameManager.BlueScore = (int)stream.ReceiveNext();
+                GameManager.RedScore = (int)stream.ReceiveNext();
+                if (BlueScores && RedScores)
+                {
+                    BlueScores.text = GameManager.BlueScore.ToString();
+                    RedScores.text = GameManager.RedScore.ToString();
+                }
                 Debug.Log(GameManager.BlueScore);
 
                 Debug.Log("BBBB");
